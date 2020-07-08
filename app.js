@@ -4,7 +4,7 @@ let Client= new Object();
 // You may modify as you wish just remember to credit LordRampantHump
 
 //******** This is the config, change what you need here ********//
-
+let init = false;
 //This is the stage id,(who we are connecting to) find yours here: https://api.caffeine.tv/v1/users/kaph, just change the username: 
 Client.stage_id = "7D59649AE6A04BF9A3F6D50329CB223E";
 
@@ -13,6 +13,8 @@ Client.background = "";
 
 //This is chat body font color and size:  
 Client.fontColor = "#000";
+//Do you want the users color to be remembered or always random? 
+Client.rememberFontColor = false;
 Client.fontSize = "2.5rem";
 
 //Do you want to show donations?
@@ -25,7 +27,6 @@ Client.ShowDonationImage = true;
 // I didn't spend a long time on this as you can tell, so this function should protect you from special characters crashing your chat, 
 //however it might break some emotes or punctuation. You can turn it off by setting it to false
 Client.Parse = true;
-
 
 
 
@@ -50,7 +51,14 @@ socket.onopen = function() {
         
         socket.send('{"Headers":{"Authorization":"Anonymous ","X-CLIENT-TYPE":"LUCIO","X-CLIENT-VERSION":"1.0.1061"}}'); // Send the
         socketInterval = setInterval(function(){   socket.send('"HEALZ"'); }, 20000); 
-		
+		if(!init){
+			insert("#output",`<span class="message">
+            <span class="user" style="color:red;">SYSTEM: </span>
+            <span class="body">Chat ready, have fun!</span>
+            </span>`);
+			init = true;
+		}
+			
 		
 		};
 
@@ -67,7 +75,11 @@ socket.onopen = function() {
 
 // Socket on message
 socket.onmessage = function(message) {
-   	
+ 
+   
+
+	
+	
     var checkmethod = message.data;
     var message  = JSON. parse(message.data);
 	
@@ -76,7 +88,7 @@ if(checkmethod.indexOf("publisher") > 0){
     if (!message.endorsement_count) {
         // avoid upvotes
 
-        if (!(message.publisher.caid in Client.Chatters)){
+        if (!(message.publisher.caid in Client.Chatters)  || !Client.rememberFontColor){
 
             Client.Chatters[message.publisher.caid] = new Object;
             Client.Chatters[message.publisher.caid].color = (Math.random().toString(16) + "000000").slice(2, 8);
@@ -84,12 +96,12 @@ if(checkmethod.indexOf("publisher") > 0){
 
         if (checkmethod.indexOf("digital_item") > 0 && Client.ShowDonation)  {
             // donation
-		var purple = (message.body.digital_item.count * message.body.digital_item.credits_per_item);
-            	var gold = (purple / 3);
-		
+			var purple = (message.body.digital_item.count * message.body.digital_item.credits_per_item);
+            var gold = (purple / 3);
+			
              
 
-           
+             
              insert("#output",`<span class="message">
              <span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
              <span class="body">Sent `+ purple +` purple credits or `+ gold +` Gold by donation!</span>
