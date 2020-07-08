@@ -67,13 +67,7 @@ socket.onopen = function() {
 
 // Socket on message
 socket.onmessage = function(message) {
-    //logit("Got a message");
-    
-    // set element positions
-   
-
-	
-	
+   	
     var checkmethod = message.data;
     var message  = JSON. parse(message.data);
 	
@@ -90,15 +84,12 @@ if(checkmethod.indexOf("publisher") > 0){
 
         if (checkmethod.indexOf("digital_item") > 0 && Client.ShowDonation)  {
             // donation
-			var purple = (message.body.digital_item.count * message.body.digital_item.credits_per_item);
-            var gold = (purple / 3);
-			 //console.warn('Donation in: P:' + purple + ' G:' + gold + ' Img: '+message.body.digital_item.static_image_path + ' From: '+message.publisher.username);
-             //donationIn('https://assets.caffeine.tv'+message.body.digital_item.static_image_path);
-             
-           
+		var purple = (message.body.digital_item.count * message.body.digital_item.credits_per_item);
+            	var gold = (purple / 3);
+		
              
 
-             
+           
              insert("#output",`<span class="message">
              <span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
              <span class="body">Sent `+ purple +` purple credits or `+ gold +` Gold by donation!</span>
@@ -116,7 +107,6 @@ if(checkmethod.indexOf("publisher") > 0){
            
              
              } else{
-            //var randomColor = (Math.random().toString(16) + "000000").slice(2, 8);
             
             insert("#output",`<span class="message">
             <span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
