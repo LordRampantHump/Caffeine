@@ -76,73 +76,53 @@ socket.onopen = function() {
 // Socket on message
 socket.onmessage = function(message) {
  
-   
 
-	
 	
     var checkmethod = message.data;
     var message  = JSON. parse(message.data);
 	
 console.log(message)
-if(checkmethod.indexOf("publisher") > 0){
-    if (!message.endorsement_count) {
-        // avoid upvotes
+	if(checkmethod.indexOf("publisher") > 0){
+		if (!message.endorsement_count) {
+			// avoid upvotes
 
-        if (!(message.publisher.caid in Client.Chatters)  || !Client.rememberFontColor){
+			if (!(message.publisher.caid in Client.Chatters)  || !Client.rememberFontColor){
 
-            Client.Chatters[message.publisher.caid] = new Object;
-            Client.Chatters[message.publisher.caid].color = (Math.random().toString(16) + "000000").slice(2, 8);
-        }
+				Client.Chatters[message.publisher.caid] = new Object;
+				Client.Chatters[message.publisher.caid].color = (Math.random().toString(16) + "000000").slice(2, 8);
+			}
 
-        if (checkmethod.indexOf("digital_item") > 0 && Client.ShowDonation)  {
-            // donation
-			var purple = (message.body.digital_item.count * message.body.digital_item.credits_per_item);
-            var gold = (purple / 3);
+			if (checkmethod.indexOf("digital_item") > 0 && Client.ShowDonation)  {
+				// donation
+				var purple = (message.body.digital_item.count * message.body.digital_item.credits_per_item);
+				var gold = (purple / 3);
+				
+				 
+				 insert("#output",`<span class="message">
+				 <span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
+				 <span class="body">Sent `+ purple +` purple credits or `+ gold +` Gold by donation!</span>
+				 </span>`)
+				 if(Client.ShowDonationImage){
+				   insert("#output",`<span class="message"><img class="image" src="https://assets.caffeine.tv`+message.body.digital_item.static_image_path+`"></span>`)
+				}
+			  
+			}
 			
-             
+			if(message.body.text != "" || message.body.text != null){
+					insert("#output",`<span class="message">
+					<span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
+					<span class="body">`+parsemalicious(message.body.text)+`</span>
+					</span>`)
+			   
+				 
+			} 
+	 
+				window.scrollTo(0,document.body.scrollHeight);
 
-             
-             insert("#output",`<span class="message">
-             <span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
-             <span class="body">Sent `+ purple +` purple credits or `+ gold +` Gold by donation!</span>
-             </span>`)
-             if(Client.ShowDonationImage){
-               insert("#output",`<span class="message"><img class="image" src="https://assets.caffeine.tv`+message.body.digital_item.static_image_path+`"></span>`)
-            }
-          
-        }
-             if(message.body.text){
-                insert("#output",`<span class="message">
-                <span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
-                <span class="body">`+parsemalicious(message.body.text)+`</span>
-                </span>`)
-           
-             
-             } else{
-            
-            insert("#output",`<span class="message">
-            <span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
-            <span class="body">`+parsemalicious(message.body.text)+`</span>
-            </span>`)
-           
-           
-
-
-        }
-            // chat message
-
-            window.scrollTo(0,document.body.scrollHeight);
-
-}
-}
+		}
+	}
 
 }};
-
-
-
-
-
-
 
 
 
