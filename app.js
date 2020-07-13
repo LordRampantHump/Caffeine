@@ -6,7 +6,7 @@ let Client= new Object();
 //******** This is the config, change what you need here ********//
 let init = false;
 //This is the stage id,(who we are connecting to) find yours here: https://api.caffeine.tv/v1/users/kaph, just change the username: 
-Client.stage_id = "78FB890A466B41A594729CF3427D0A97";
+Client.stage_id = "7D59649AE6A04BF9A3F6D50329CB223E";
 
 //This is chat background, if you want transparent chat just leave it blank or white make it #fff or semi transparent make it rgba(0,0,0,0.4):  
 Client.background = "";
