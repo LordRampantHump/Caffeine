@@ -6,7 +6,7 @@ let Client= new Object();
 //******** This is the config, change what you need here ********//
 let init = false;
 //This is the stage id,(who we are connecting to) find yours here: https://api.caffeine.tv/v1/users/kaph, just change the username: 
-Client.stage_id = "7D59649AE6A04BF9A3F6D50329CB223E";
+Client.stage_id = "78FB890A466B41A594729CF3427D0A97";
 
 //This is chat background, if you want transparent chat just leave it blank or white make it #fff or semi transparent make it rgba(0,0,0,0.4):  
 Client.background = "";
@@ -15,7 +15,7 @@ Client.background = "";
 Client.fontColor = "#000";
 //Do you want the users color to be remembered or always random? 
 Client.rememberFontColor = false;
-Client.fontSize = "2.5rem";
+Client.fontSize = "1rem";
 
 //Do you want to show donations?
 Client.ShowDonation = true;
@@ -38,9 +38,13 @@ document.body.style.backgroundColor = Client.background;
 document.body.style.fontSize = Client.fontSize;
 document.body.style.color = Client.fontColor;
 
-
-
-
+//Handles Caffeine Badges 
+let badges = new Object();
+badges.CASTER  = '<svg style="vertical-align:middle;" width="'+(+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0]) + ((+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0])/100)*85))+'px" height="'+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0])+'px" viewBox="0 0 21 18"><g fill="none" fill-rule="evenodd"><path fill="#000" d="M21 9l-5.25 9H5.25L0 9l5.25-9h10.5z"></path><path d="M14.75 2L19 9l-4.25 7h-8.5L2 9l4.25-7h8.5zm-4.052 2C8.108 4 6 6.243 6 9s2.108 5 4.698 5c1.79 0 3.4-1.059 4.202-2.763.233-.494.045-1.095-.419-1.342-.464-.248-1.029-.048-1.26.446C12.737 11.364 11.771 12 10.697 12 9.144 12 7.88 10.654 7.88 9s1.265-3 2.82-3c1.073 0 2.04.636 2.521 1.66.232.493.797.693 1.261.445.464-.247.652-.848.42-1.342C14.097 5.06 12.487 4 10.697 4z" fill="#FFFD00"></path></g></svg>';
+badges.PARTNER1  = '<svg style="vertical-align:middle;" width="'+(+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0]) + ((+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0])/100)*85))+'px" height="'+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0])+'px" viewBox="0 0 26 18"><g fill="none" fill-rule="evenodd"><path fill="#000" d="M26 9l-5.25 9H5.25L0 9l5.25-9h15.5z"></path><path fill="#0FF" d="M9.25 2L5 9l4.25 7h-3L2 9l4.25-7z"></path><path d="M19.75 2L24 9l-4.25 7h-8.5L7 9l4.25-7h8.5zm-4.052 2C13.108 4 11 6.243 11 9s2.108 5 4.698 5c1.79 0 3.4-1.059 4.202-2.763.233-.494.045-1.095-.419-1.342-.464-.248-1.029-.048-1.26.446C17.737 11.364 16.771 12 15.697 12c-1.554 0-2.819-1.346-2.819-3s1.265-3 2.82-3c1.073 0 2.04.636 2.521 1.66.232.493.797.693 1.261.445.464-.247.652-.848.42-1.342C19.097 5.06 17.487 4 15.697 4z" fill="#0FF"></path></g></svg>';
+badges.VERIFIED  = '<svg style="vertical-align:middle;" width="'+(+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0]) + ((+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0])/100)*85))+'px" height="'+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0])+'px" viewBox="0 0 21 18"><g fill="none" fill-rule="evenodd"><path fill="#000" d="M21 9l-5.25 9H5.25L0 9l5.25-9h10.5z"></path><path d="M14.75 2L19 9l-4.25 7h-8.5L2 9l4.25-7h8.5zm-.712 3.113c-.441-.232-1.006-.095-1.26.307l-3.206 5.052-1.35-2.128c-.254-.402-.819-.54-1.26-.308-.442.232-.593.746-.338 1.148l2.154 3.396c.254.402.819.54 1.26.307a.868.868 0 00.386-.394l3.952-6.233c.255-.401.104-.915-.338-1.147z" fill="#FFF"></path></g></svg>';
+badges.NONE = '<svg style="vertical-align:middle;" width="'+(+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0]) + ((+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0])/100)*85))+'px" height="'+Number(window.getComputedStyle(document.body).getPropertyValue('font-size').match(/\d+/)[0])+'px" viewBox="0 0 21 18"></svg>';
+badges.NONE = "";
 
 function CaffeineconnectChat(){	
 
@@ -99,7 +103,7 @@ console.log(message)
 				
 				 
 				 insert("#output",`<span class="message">
-				 <span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
+				 <span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+ message.publisher.username +`:`+(message.publisher.badge ? badges[message.publisher.badge] : badges.NONE)+` </span>
 				 <span class="body">Sent `+ purple +` purple credits or `+ gold +` Gold by donation!</span>
 				 </span>`)
 				 if(Client.ShowDonationImage){
@@ -110,7 +114,7 @@ console.log(message)
 			
 			if(message.body.text != "" || message.body.text != null){
 					insert("#output",`<span class="message">
-					<span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+message.publisher.username+`: </span>
+					<span class="user" style="color:#`+Client.Chatters[message.publisher.caid].color+`;">`+ message.publisher.username +`:`+(message.publisher.badge ? badges[message.publisher.badge] : badges.NONE)+` </span>
 					<span class="body">`+parsemalicious(message.body.text)+`</span>
 					</span>`)
 			   
@@ -123,6 +127,12 @@ console.log(message)
 	}
 
 }};
+
+
+
+
+
+
 
 
 
